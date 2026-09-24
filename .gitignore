@@ -1,0 +1,73 @@
+# =============================================================================
+# Amazon ML Challenge — Business Entity Resolution
+# =============================================================================
+
+# --- Challenge dataset (never commit; large, provided by organizers) --------
+student_resource/dataset/
+*.tsv
+
+# --- Our derived caches / generated data -------------------------------------
+data_cache/
+*.parquet
+
+# --- Pipeline outputs: candidates, predictions, submissions -----------------
+/output/
+*.zip
+candidate_pairs.tsv
+matching_results.tsv
+
+# --- Models, checkpoints, embeddings -----------------------------------------
+/models/
+/checkpoints/
+/embeddings/
+*.pkl
+*.pickle
+*.joblib
+*.bin
+*.pt
+*.pth
+*.onnx
+*.h5
+*.ckpt
+*.lgb
+*.cbm
+
+# --- Python virtual environments / package caches ----------------------------
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+pip-wheel-metadata/
+
+# --- Secrets / credentials / environment config ------------------------------
+.env
+.env.*
+*.pem
+*.key
+*credentials*
+.aws/
+aws_config
+
+# --- Jupyter --------------------------------------------------------------
+.ipynb_checkpoints/
+
+# --- OS / editor cruft --------------------------------------------------
+.DS_Store
+**/.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# --- Logs / scratch --------------------------------------------------------
+*.log
+/tmp/
+/scratch/
