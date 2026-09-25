@@ -1,0 +1,11 @@
+{
+  "n_pairs": 2879651,
+  "n_features_e05": 71,
+  "n_positive": 642216,
+  "pos_rate": 0.2230186921956862,
+  "matrix_gb": 0.817820884,
+  "dtype": "float32",
+  "pair_build_seconds": 19.0,
+  "feature_generation_seconds": 287.2,
+  "peak_rss_gb": 5.97
+}

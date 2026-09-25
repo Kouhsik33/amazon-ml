@@ -33,6 +33,8 @@ work/model*.txt
 *.ckpt
 *.lgb
 *.cbm
+*.npy
+*.npz
 
 # --- Python virtual environments / package caches ----------------------------
 .venv/

@@ -1,0 +1,47 @@
+[LightGBM] [Info] Number of positive: 642216, number of negative: 2237435
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.202235 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 6906
+[LightGBM] [Info] Number of data points in the train set: 2879651, number of used features: 60
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.223019 -> initscore=-1.248161
+[LightGBM] [Info] Start training from score -1.248161
+{
+  "variant": "e04",
+  "n_threads_requested": -1,
+  "force_mode": "auto",
+  "tag": "_heldsides",
+  "swap_used_gb_before": 8.78,
+  "free_ram_gb_before": 0.02,
+  "load_seconds": 1.1,
+  "select_seconds": 4.8,
+  "n_pairs": 2879651,
+  "n_features": 62,
+  "matrix_gb": 0.714,
+  "hold_sides_load_seconds": 54.1,
+  "rss_after_holding_gb": 4.58,
+  "free_ram_gb_after_holding": 1.34,
+  "params": {
+    "objective": "binary",
+    "num_leaves": 127,
+    "n_estimators": 600,
+    "learning_rate": 0.06,
+    "min_child_samples": 60,
+    "subsample": 0.85,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 1.0,
+    "random_state": 7,
+    "n_jobs": -1
+  },
+  "dataset_construct_seconds": 5.6,
+  "dataset_num_features": 62,
+  "train_seconds": 136.0,
+  "score_500k_seconds": 7.4,
+  "actual_num_threads": 12,
+  "peak_rss_gb": 4.58,
+  "swap_used_gb_after": 13.02,
+  "free_ram_gb_after": 1.71,
+  "n_trees": 600,
+  "held_sides": true
+}
