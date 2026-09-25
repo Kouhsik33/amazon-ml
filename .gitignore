@@ -21,6 +21,7 @@ matching_results.tsv
 /models/
 /checkpoints/
 /embeddings/
+work/model*.txt
 *.pkl
 *.pickle
 *.joblib
