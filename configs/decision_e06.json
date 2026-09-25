@@ -1,0 +1,30 @@
+{
+  "model": "E06",
+  "model_path": "data_cache/models/lgbm_e06_500k.txt",
+  "s2_threshold": 0.88,
+  "s3_threshold": 0.88,
+  "rel_margin": 0.95,
+  "margin_threshold": null,
+  "candidate_count_rules": null,
+  "singleton_rules": null,
+  "max_k": 11,
+  "evidence_override": {
+    "signal": "rr_score",
+    "rr_min": 0.74,
+    "p_min": 0.65,
+    "note": "Accept a pair the thresholds rejected when the stored lexical reranker score is >= rr_min and model probability >= p_min. rr_score is produced by src/candidate_generation/rerank.py and persisted in cand_*_k80.parquet; it bundles name (0.50), address (0.28), numeric (0.14) and blocking-key agreement (0.08)."
+  },
+  "inference_requirements": [
+    "cand_*.parquet must carry rr_score (it already does)",
+    "join scored probabilities to candidates on (source1_entity_id, cand_id)",
+    "accept = (p >= threshold AND p >= best_p_for_entity * rel_margin) OR (rr_score >= 0.74 AND p >= 0.65)",
+    "then keep at most max_k per entity, highest p first"
+  ],
+  "validation": {
+    "tuned_on": "dev (40,004 entities)",
+    "evaluated_on": "val (59,999 entities), single evaluation at the dev-locked config",
+    "dev_macro_f05": 0.936096,
+    "val_macro_f05": 0.935201,
+    "baseline_val_macro_f05": 0.928635
+  }
+}

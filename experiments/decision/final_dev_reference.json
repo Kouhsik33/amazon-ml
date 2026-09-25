@@ -1,0 +1,24 @@
+{
+  "fold": "dev",
+  "rule": {
+    "t_s2": 0.88,
+    "t_s3": 0.88,
+    "rel_margin": 0.95,
+    "min_best": 0.0,
+    "max_k": 11,
+    "gap_min": 0.0,
+    "override_rr": 0.74,
+    "override_p": 0.65,
+    "count_bumps": []
+  },
+  "macro_f05": 0.936095996625055,
+  "mean_precision": 0.9825122690744653,
+  "mean_recall": 0.8806973853904035,
+  "singleton_accuracy": 0.9310961968680089,
+  "s2_f05": 0.9049576303557925,
+  "s3_f05": 0.9184869905542515,
+  "FP": 2036,
+  "FN": 18273,
+  "TP": 120260,
+  "n_predicted": 122296
+}
