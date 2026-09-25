@@ -1,0 +1,57 @@
+{
+  "scope": {
+    "country": "us",
+    "source": "S2",
+    "n_eval": 1000,
+    "n_fit": 4823,
+    "n_tune": 1177,
+    "seed": 20260926
+  },
+  "results": [
+    {
+      "config": "A_k15_df225315",
+      "top_k": 15,
+      "addr_max_df": 225315.18,
+      "threshold": 0.31999999999999995,
+      "tune_f05": 0.9421754896523444,
+      "candidate_recall": 0.9702127659574468,
+      "candidate_precision": 0.10733741341045128,
+      "macro_f05": 0.9219029724840089,
+      "pair_precision": 0.9488636363636364,
+      "pair_recall": 0.9136778115501519,
+      "n_predicted": 1584,
+      "false_positives": 81,
+      "missed_true": 142
+    },
+    {
+      "config": "B_k30_df225315",
+      "top_k": 30,
+      "addr_max_df": 225315.18,
+      "threshold": 0.4599999999999999,
+      "tune_f05": 0.9443280264600101,
+      "candidate_recall": 0.9775075987841946,
+      "candidate_precision": 0.05454360435534751,
+      "macro_f05": 0.93007298983859,
+      "pair_precision": 0.9696969696969697,
+      "pair_recall": 0.9142857142857143,
+      "n_predicted": 1551,
+      "false_positives": 47,
+      "missed_true": 141
+    },
+    {
+      "config": "C_k30_df400000",
+      "top_k": 30,
+      "addr_max_df": 400000.0,
+      "threshold": 0.5199999999999998,
+      "tune_f05": 0.9449731914654527,
+      "candidate_recall": 0.9829787234042553,
+      "candidate_precision": 0.05443894556105444,
+      "macro_f05": 0.9286571955639763,
+      "pair_precision": 0.9682436811406351,
+      "pair_recall": 0.9082066869300912,
+      "n_predicted": 1543,
+      "false_positives": 49,
+      "missed_true": 151
+    }
+  ]
+}

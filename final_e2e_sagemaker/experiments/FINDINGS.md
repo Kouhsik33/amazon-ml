@@ -70,3 +70,59 @@ requires an end-to-end run to settle.
   are valid; the *absolute* values are not byte-comparable to an Approach2 run.
 - Ceiling is an upper bound only. No ranker, no decision layer, no F0.5 here.
 - 1,000 S1 / ~1,645 true S2 pairs — small-integer counts carry real uncertainty.
+
+---
+
+## EXP-03 — end-to-end macro F0.5 (retrieval → features → LightGBM → threshold)
+
+Answers what EXP-01/02 could not: the ceiling rose, but does **actual** F0.5?
+
+Splits (entity-level, disjoint, leak-asserted at runtime):
+`FIT` 4,823 train-split US S1 → model only · `TUNE` 1,177 train-split US S1 →
+threshold only · `EVAL` 1,000 val-split US S1 (the EXP-01 sample) → scored once.
+Features: 62 lexical/context + retrieval score + retrieval rank. Negatives are
+retrieved false candidates, i.e. hard by construction.
+
+| config | cand recall | cand prec | **macro F0.5** | pair P | pair R | predicted | FP | FN |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| A `k=15, df=225,315` (baseline) | 97.0213% | 10.7337% | 0.921903 | 0.9489 | 0.9137 | 1,584 | 81 | 142 |
+| B `k=30, df=225,315` | 97.7508% | 5.4544% | **0.930073** | 0.9697 | 0.9143 | 1,551 | 47 | 141 |
+| C `k=30, df=400,000` | 98.2979% | 5.4439% | 0.928657 | 0.9682 | 0.9082 | 1,543 | 49 | 151 |
+
+### MEASURED RESULT
+
+1. **TOP_K 15 → 30 improves end-to-end F0.5: +0.008170** (0.921903 → 0.930073).
+   Driven by precision (0.9489 → 0.9697): FP fall 81 → 47 while recall holds.
+   Doubling candidates gave the ranker better contrast, not more noise.
+
+2. **The DF relaxation does NOT survive ranking: −0.001416** (B → C).
+   Candidate recall rises (+0.55 pp) yet F0.5 *falls*: +1 FP and +10 FN.
+   The extra candidates it admits are not ones the ranker can exploit.
+
+**The two retrieval changes behave oppositely end-to-end.** Candidate recall
+alone was a misleading proxy — C has the best recall of the three and the
+second-worst F0.5.
+
+### RECOMMENDATION
+
+Adopt `top_k=30`. Do **not** adopt `addr_max_df=400,000`; keep the frozen
+0.03 share.
+
+### Caveats
+
+- US / S2 only. **0.92–0.93 here is not comparable to the 0.987 full-task
+  gate** — the restricted task has a different population and denominator.
+- Ranker trained on 4,823 entities only; it is deliberately small for a fast
+  controlled comparison. The gap to the k=30 ceiling (0.988933 vs 0.930073)
+  is now **model-limited, not retrieval-limited**.
+- Single seed, 1,000 eval entities; FP/FN differences of ~2 are within noise.
+  The +0.0082 for k=30 is well clear of that; the −0.0014 for 400K is not.
+
+### Correctness fix affecting EXP-01/02
+
+`uniq.searchsorted(h)` was used without an exact-match test, so a query key
+absent from the B vocabulary aliased to a neighbouring key and contributed its
+postings. Fixed in `engine.lookup()` (index and query sides). Re-measurement
+shows candidate **recall is unchanged** (97.0213% / 97.7508% / 98.2979% all
+reproduce), so the EXP-01/02 recall and ceiling figures stand; candidate
+*precision* shifts marginally (10.7035% → 10.7337% at k=15).

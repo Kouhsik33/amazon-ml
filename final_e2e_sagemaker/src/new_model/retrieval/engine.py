@@ -30,6 +30,25 @@ UNIQ = lambda col, alias: (
 _H = lambda seq: pl.Series(seq).hash().to_numpy()
 
 
+def lookup(uniq: np.ndarray, keep: np.ndarray, hashes) -> np.ndarray:
+    """Vocabulary positions for `hashes`, EXACT matches only.
+
+    searchsorted alone returns an insertion point, so a key absent from the B
+    vocabulary aliases to a neighbouring key and would contribute that key's
+    postings. The `uniq[pos] == h` test is what makes the lookup correct.
+    """
+    h = np.asarray(list(hashes), dtype=np.uint64) if not isinstance(hashes, np.ndarray) \
+        else hashes.astype(np.uint64, copy=False)
+    if h.size == 0:
+        return np.empty(0, np.int64)
+    pos = uniq.searchsorted(h)
+    ok = pos < len(uniq)
+    pos = pos[ok]; h = h[ok]
+    exact = uniq[pos] == h            # <- rejects aliased misses
+    pos = pos[exact]
+    return pos[keep[pos]].astype(np.int64)
+
+
 def corpus_df(paths: list[str], col: str, ctry: str) -> tuple[dict, int]:
     """Document frequency over one country across the given parquet files."""
     parts, n_all = [], 0
@@ -104,15 +123,23 @@ class CountryIndex:
         self.mass_b = (np.bincount(rn[mn], weights=idf2[iv_n[mn]], minlength=n_b)
                        + np.bincount(ra[ma], weights=idf2[iv_a[ma]], minlength=n_b))
 
-        want = {p for p in (uniq.searchsorted(h) for h in query_keys)
-                if 0 <= p < len(uniq) and keep[p]}
-        post = defaultdict(list)
+        want = np.unique(lookup(uniq, keep, np.fromiter(query_keys, np.uint64, len(query_keys))))
+        post = {}
         for iv, rr, msk in ((iv_n, rn, mn), (iv_a, ra, ma)):
             sel = np.flatnonzero(msk)
-            for k, r in zip(iv[sel], rr[sel]):
-                if k in want:
-                    post[k].append(r)
-        self.post = {k: np.asarray(v, np.int32) for k, v in post.items()}
+            kk, rv = iv[sel].astype(np.int64), rr[sel]
+            hit = np.isin(kk, want, assume_unique=False)
+            kk, rv = kk[hit], rv[hit]
+            if kk.size == 0:
+                continue
+            o = np.argsort(kk, kind="stable")
+            kk, rv = kk[o], rv[o]
+            starts = np.flatnonzero(np.r_[True, kk[1:] != kk[:-1]])
+            ends = np.r_[starts[1:], kk.size]
+            for st, en in zip(starts, ends):
+                k = int(kk[st])
+                post[k] = np.concatenate([post[k], rv[st:en]]) if k in post else rv[st:en]
+        self.post = post
         self.uniq, self.keep, self.idf2 = uniq, keep, idf2
         log(f"    index n_b={n_b:,} cap={cap} vocab={len(uniq):,} "
             f"kept={keep.mean():.2%} queried_keys={len(self.post):,}")
@@ -126,8 +153,7 @@ class CountryIndex:
         argpartition would keep.
         """
         cfg = self.cfg
-        ks = [p for p in (self.uniq.searchsorted(h) for h in q_keys)
-              if 0 <= p < len(self.uniq) and self.keep[p]]
+        ks = [int(k) for k in lookup(self.uniq, self.keep, q_keys)]
         arrs = [self.post[k] for k in ks if k in self.post]
         if not arrs:
             return np.empty(0, np.int32), np.empty(0, np.float64)
@@ -150,8 +176,7 @@ class CountryIndex:
         """Return (row_ids, scores) for one S1, already POOLed and reranked."""
         cfg = self.cfg
         top_k = cfg.top_k if top_k is None else top_k
-        ks = [p for p in (self.uniq.searchsorted(h) for h in q_keys)
-              if 0 <= p < len(self.uniq) and self.keep[p]]
+        ks = [int(k) for k in lookup(self.uniq, self.keep, q_keys)]
         arrs = [self.post[k] for k in ks if k in self.post]
         if not arrs:
             return np.empty(0, np.int32), np.empty(0, np.float64)
