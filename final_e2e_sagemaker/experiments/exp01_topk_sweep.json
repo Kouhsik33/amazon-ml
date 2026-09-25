@@ -1,0 +1,100 @@
+{
+  "config": {
+    "name": "approach2_baseline",
+    "name_generic_share": 0.05,
+    "addr_generic_share": 0.03,
+    "addr_max_df_abs": null,
+    "name_core_top": 6,
+    "addr_core_top": 8,
+    "cap_frac": 0.0002,
+    "min_cap": 20,
+    "pool": 600,
+    "top_k": 15,
+    "rerank": "cos"
+  },
+  "scope": {
+    "country": "us",
+    "source": "S2",
+    "n_s1": 1000,
+    "seed": 20260926
+  },
+  "results": [
+    {
+      "n_entities": 1000,
+      "n_candidates": 4996,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1531,
+      "candidate_recall": 0.9306990881458966,
+      "candidate_precision": 0.3064451561248999,
+      "cand_per_entity": 4.996,
+      "macro_f05_ceiling": 0.9672698673875147,
+      "top_k": 5
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 9974,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1585,
+      "candidate_recall": 0.9635258358662614,
+      "candidate_precision": 0.15891317425305795,
+      "cand_per_entity": 9.974,
+      "macro_f05_ceiling": 0.9801212121212124,
+      "top_k": 10
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 14911,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1596,
+      "candidate_recall": 0.9702127659574468,
+      "candidate_precision": 0.10703507477701026,
+      "cand_per_entity": 14.911,
+      "macro_f05_ceiling": 0.9848636363636365,
+      "top_k": 15
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 29564,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1608,
+      "candidate_recall": 0.9775075987841946,
+      "candidate_precision": 0.05439047490190772,
+      "cand_per_entity": 29.564,
+      "macro_f05_ceiling": 0.9889334415584415,
+      "top_k": 30
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 48746,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1616,
+      "candidate_recall": 0.982370820668693,
+      "candidate_precision": 0.03315143806671317,
+      "cand_per_entity": 48.746,
+      "macro_f05_ceiling": 0.992420183982684,
+      "top_k": 50
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 94653,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1629,
+      "candidate_recall": 0.990273556231003,
+      "candidate_precision": 0.017210231054483216,
+      "cand_per_entity": 94.653,
+      "macro_f05_ceiling": 0.9947968073593072,
+      "top_k": 100
+    },
+    {
+      "n_entities": 1000,
+      "n_candidates": 420360,
+      "n_true_pairs": 1645,
+      "true_retrieved": 1634,
+      "candidate_recall": 0.9933130699088146,
+      "candidate_precision": 0.0038871443524597965,
+      "cand_per_entity": 420.36,
+      "macro_f05_ceiling": 0.9961496212121211,
+      "top_k": 600
+    }
+  ]
+}

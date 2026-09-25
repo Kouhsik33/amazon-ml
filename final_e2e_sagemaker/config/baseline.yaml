@@ -1,0 +1,65 @@
+# =============================================================================
+# approach2 — FROZEN BASELINE CONFIGURATION
+# =============================================================================
+# Describes the currently verified approach2 pipeline. This file is a RECORD of
+# the frozen baseline, not a switch that drives it: approach2 reads these values
+# from its own source (see `source_of_truth` below), not from this YAML.
+#
+# Any experimental variation must be expressed as a SEPARATE config file and
+# must never silently replace these values.
+# =============================================================================
+
+baseline_name: approach2_frozen_baseline
+
+# --- retrieval / blocking -----------------------------------------------------
+# Frozen algorithmic parameters. Do not edit without a controlled experiment.
+addr_max_df: 225315      # US-scoped absolute value; see note on ADDR_GENERIC_SHARE
+pool: 600
+top_k: 15
+cap_frac: 0.0002
+min_cap: 20
+rerank: cos
+
+# --- training -----------------------------------------------------------------
+hfrac: 0.15
+stage2: true
+
+# --- data paths (LOCAL, as currently observed in this repository) -------------
+# Recorded as metadata only. Nothing here moves, renames or creates data.
+# NOTE: this repository does NOT contain dataset/normalized/. Do not create it.
+paths:
+  local_raw_data_dir: student_resource/dataset   # TSVs: <split>/<split>_source{1,2,3}.tsv + train_ground_truth.tsv
+  local_normalized_data_dir: data_cache          # norm_*.parquet (NOT consumed by approach2; it reads TSV only)
+
+# --- artifact locations (logical; NOT created yet) ----------------------------
+work_dir: work/final_e2e
+output_dir: output/final_e2e
+
+# --- AWS ----------------------------------------------------------------------
+# Credentials are never stored here. Access is via the SageMaker execution role.
+aws:
+  region: ap-south-1
+  bucket: sagemaker-ap-south-1-257949589156
+  prefix: amazon-ml-challenge
+  # The exact S3 dataset prefix under this root has NOT been verified.
+  # It will be confirmed in a later read-only inspection task before any
+  # pipeline stage depends on it. Do not assume a directory structure here.
+
+# --- where these values actually live in approach2 ----------------------------
+# Recorded so the baseline can be audited without re-deriving it.
+source_of_truth:
+  pool:        "approach2/code/business_entity_resolution/src/common.py:15"
+  top_k:       "approach2/code/business_entity_resolution/src/common.py:12"
+  cap_frac:    "approach2/code/business_entity_resolution/src/common.py:13"
+  min_cap:     "approach2/code/business_entity_resolution/src/common.py:14"
+  rerank:      "approach2/code/business_entity_resolution/src/common.py:16"
+  hfrac:       "approach2/code/business_entity_resolution/src/s03_train.py:23 (argv); x01_learning_curve.py:18 (hard-coded)"
+  addr_max_df: "derived, not a literal - blocking.py:72 computes ADDR_GENERIC_SHARE (blocking.py:17 = 0.03) * n_all, where n_all = |S1|+|S2|+|S3| for one country. 0.03 * 7510506 (US) = 225315"
+
+notes:
+  - "Do not modify approach2 baseline."
+  - "addr_max_df=225315 is frozen until a controlled validation experiment proves otherwise."
+  - "HFRAC must remain 0.15 because s03 and x01 must produce identical holdout selection for Stage 2."
+  - "Large datasets and generated artifacts must not be committed to GitHub."
+  - "addr_max_df is country-relative in approach2 (a share, not an absolute). 225315 is the US value; India resolves to 150496 at the same 0.03 share."
+  - "approach2 consumes TSV only; local_normalized_data_dir is recorded for the wider project, not for approach2."
