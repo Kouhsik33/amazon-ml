@@ -1,0 +1,42 @@
+[
+  {
+    "tag": "200k",
+    "n_entities": 199803,
+    "n_pairs": 2879651,
+    "n_pos": 642216,
+    "n_neg": 2237435,
+    "pos_rate": 0.2230186921956862,
+    "neg_above_thr": 2575,
+    "neg_above_thr_per_entity": 0.012887694378963279,
+    "pos_below_thr": 41672,
+    "pos_below_thr_per_entity": 0.20856543695540106,
+    "in_band": 624620,
+    "in_band_per_entity": 3.1261792865972984,
+    "neg_in_band": 6125,
+    "pos_in_band": 618495,
+    "frac_pairs_in_band": 0.21690822950420033,
+    "neg_p_mean": 0.009868158958852291,
+    "neg_p_p99": 0.29189513146877355,
+    "neg_p_p999": 0.8758770722150803
+  },
+  {
+    "tag": "500k",
+    "n_entities": 499499,
+    "n_pairs": 7203864,
+    "n_pos": 1607543,
+    "n_neg": 5596321,
+    "pos_rate": 0.22315010388869086,
+    "neg_above_thr": 9789,
+    "neg_above_thr_per_entity": 0.01959763683210577,
+    "pos_below_thr": 110441,
+    "pos_below_thr_per_entity": 0.22110354575284435,
+    "in_band": 1561449,
+    "in_band_per_entity": 3.126030282342908,
+    "neg_in_band": 20085,
+    "pos_in_band": 1541364,
+    "frac_pairs_in_band": 0.21675159331158944,
+    "neg_p_mean": 0.010754141956567764,
+    "neg_p_p99": 0.33063076138496017,
+    "neg_p_p999": 0.9206009411812079
+  }
+]
