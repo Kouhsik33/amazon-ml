@@ -9,10 +9,11 @@ student_resource/dataset/
 # --- Our derived caches / generated data -------------------------------------
 data_cache/
 *.parquet
-
 # --- Pipeline outputs: candidates, predictions, submissions -----------------
 /output/
 *.zip
+!code.zip
+!work.zip.part-*
 candidate_pairs.tsv
 matching_results.tsv
 
