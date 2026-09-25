@@ -1,0 +1,63 @@
+file_name,source,split,column_name,data_type,description,original_or_derived,notes
+norm_train_source1.parquet,source1,train,entity_id,string,Unique record identifier; prefix S1- identifies the source,original,Unchanged from raw challenge TSV
+norm_train_source1.parquet,source1,train,nm_full,string,Fully normalized business name: Indic romanized; accents stripped; lowercased; punctuation folded to spaces; legal-suffix spelling variants aliased; no tokens removed,derived,Reliable as-shipped; does not depend on noise tables
+norm_train_source1.parquet,source1,train,nm_core,string,nm_full with mined noise tokens (legal suffixes / filler words) removed,derived,STALE ON DISK for ~72.6% of rows vs current config tables; see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_train_source1.parquet,source1,train,nm_compact,string,nm_core with all spaces removed (matches domain-style names like carneybryant.com),derived,STALE ON DISK for ~72.6% of rows; depends on nm_core
+norm_train_source1.parquet,source1,train,nm_skel,string,nm_compact with vowels (a e i o u) removed; consonant skeleton for vowel-typo/transliteration tolerance,derived,STALE ON DISK for ~72.6% of rows; depends on nm_compact
+norm_train_source1.parquet,source1,train,ad_full,string,Fully normalized address: Indic romanized; accents stripped; lowercased; null placeholders removed; digit/letter split; ordinals canonicalized; abbreviation aliasing applied; no tokens removed,derived,Reliable as-shipped; does not depend on noise tables
+norm_train_source1.parquet,source1,train,ad_core,string,ad_full with mined address noise tokens (residual state names/abbreviations, unit/box designators) removed,derived,STALE ON DISK for ~32.8% of rows vs current config tables
+norm_train_source1.parquet,source1,train,ad_num,string,Space-joined purely-numeric tokens from the address (street numbers, PIN/postal codes, unit numbers),derived,STALE ON DISK for ~22.3% of rows; current live version also strips leading zeros and de-duplicates, cached value does not
+norm_train_source1.parquet,source1,train,ad_alpha,string,Space-joined non-numeric tokens from ad_core (alphabetic street/area-name portion of the address),derived,STALE ON DISK for ~30.2% of rows; depends on ad_core
+norm_train_source1.parquet,source1,train,ctry,string,Normalized country label: accent-stripped lowercased whitespace-squeezed,derived,Open-set - no mapping table or filtering; unseen labels (e.g. France) pass through unchanged
+norm_train_source2.parquet,source2,train,entity_id,string,Unique record identifier; prefix S2- identifies the source,original,Unchanged from raw challenge TSV
+norm_train_source2.parquet,source2,train,nm_full,string,Fully normalized business name (see norm_train_source1.parquet nm_full for full transformation description),derived,Reliable as-shipped
+norm_train_source2.parquet,source2,train,nm_core,string,Name minus mined noise tokens,derived,STALE ON DISK - see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_train_source2.parquet,source2,train,nm_compact,string,nm_core with spaces removed,derived,STALE ON DISK
+norm_train_source2.parquet,source2,train,nm_skel,string,Consonant skeleton of nm_compact,derived,STALE ON DISK
+norm_train_source2.parquet,source2,train,ad_full,string,Fully normalized address (see norm_train_source1.parquet ad_full for full transformation description),derived,Reliable as-shipped
+norm_train_source2.parquet,source2,train,ad_core,string,Address minus mined noise tokens,derived,STALE ON DISK
+norm_train_source2.parquet,source2,train,ad_num,string,Space-joined numeric address tokens,derived,STALE ON DISK
+norm_train_source2.parquet,source2,train,ad_alpha,string,Space-joined non-numeric address-core tokens,derived,STALE ON DISK
+norm_train_source2.parquet,source2,train,ctry,string,Normalized country label,derived,Open-set; no mapping/filtering
+norm_train_source3.parquet,source3,train,entity_id,string,Unique record identifier; prefix S3- identifies the source,original,Unchanged from raw challenge TSV
+norm_train_source3.parquet,source3,train,nm_full,string,Fully normalized business name (see norm_train_source1.parquet nm_full for full transformation description),derived,Reliable as-shipped
+norm_train_source3.parquet,source3,train,nm_core,string,Name minus mined noise tokens,derived,STALE ON DISK - see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_train_source3.parquet,source3,train,nm_compact,string,nm_core with spaces removed,derived,STALE ON DISK
+norm_train_source3.parquet,source3,train,nm_skel,string,Consonant skeleton of nm_compact,derived,STALE ON DISK
+norm_train_source3.parquet,source3,train,ad_full,string,Fully normalized address (see norm_train_source1.parquet ad_full for full transformation description),derived,Reliable as-shipped
+norm_train_source3.parquet,source3,train,ad_core,string,Address minus mined noise tokens,derived,STALE ON DISK
+norm_train_source3.parquet,source3,train,ad_num,string,Space-joined numeric address tokens,derived,STALE ON DISK
+norm_train_source3.parquet,source3,train,ad_alpha,string,Space-joined non-numeric address-core tokens,derived,STALE ON DISK
+norm_train_source3.parquet,source3,train,ctry,string,Normalized country label,derived,Open-set; no mapping/filtering
+norm_test_source1.parquet,source1,test,entity_id,string,Unique record identifier; prefix S1- identifies the source,original,Unchanged from raw challenge TSV
+norm_test_source1.parquet,source1,test,nm_full,string,Fully normalized business name (see norm_train_source1.parquet nm_full for full transformation description),derived,Reliable as-shipped
+norm_test_source1.parquet,source1,test,nm_core,string,Name minus mined noise tokens,derived,STALE ON DISK - see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_test_source1.parquet,source1,test,nm_compact,string,nm_core with spaces removed,derived,STALE ON DISK
+norm_test_source1.parquet,source1,test,nm_skel,string,Consonant skeleton of nm_compact,derived,STALE ON DISK
+norm_test_source1.parquet,source1,test,ad_full,string,Fully normalized address (see norm_train_source1.parquet ad_full for full transformation description),derived,Reliable as-shipped
+norm_test_source1.parquet,source1,test,ad_core,string,Address minus mined noise tokens,derived,STALE ON DISK
+norm_test_source1.parquet,source1,test,ad_num,string,Space-joined numeric address tokens,derived,STALE ON DISK
+norm_test_source1.parquet,source1,test,ad_alpha,string,Space-joined non-numeric address-core tokens,derived,STALE ON DISK
+norm_test_source1.parquet,source1,test,ctry,string,Normalized country label,derived,"Open-set; test set includes France, which is absent from training and must not be hardcoded/filtered"
+norm_test_source2.parquet,source2,test,entity_id,string,Unique record identifier; prefix S2- identifies the source,original,Unchanged from raw challenge TSV
+norm_test_source2.parquet,source2,test,nm_full,string,Fully normalized business name (see norm_train_source1.parquet nm_full for full transformation description),derived,Reliable as-shipped
+norm_test_source2.parquet,source2,test,nm_core,string,Name minus mined noise tokens,derived,STALE ON DISK - see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_test_source2.parquet,source2,test,nm_compact,string,nm_core with spaces removed,derived,STALE ON DISK
+norm_test_source2.parquet,source2,test,nm_skel,string,Consonant skeleton of nm_compact,derived,STALE ON DISK
+norm_test_source2.parquet,source2,test,ad_full,string,Fully normalized address (see norm_train_source1.parquet ad_full for full transformation description),derived,Reliable as-shipped
+norm_test_source2.parquet,source2,test,ad_core,string,Address minus mined noise tokens,derived,STALE ON DISK
+norm_test_source2.parquet,source2,test,ad_num,string,Space-joined numeric address tokens,derived,STALE ON DISK
+norm_test_source2.parquet,source2,test,ad_alpha,string,Space-joined non-numeric address-core tokens,derived,STALE ON DISK
+norm_test_source2.parquet,source2,test,ctry,string,Normalized country label,derived,"Open-set; test set includes France, which is absent from training and must not be hardcoded/filtered"
+norm_test_source3.parquet,source3,test,entity_id,string,Unique record identifier; prefix S3- identifies the source,original,Unchanged from raw challenge TSV
+norm_test_source3.parquet,source3,test,nm_full,string,Fully normalized business name (see norm_train_source1.parquet nm_full for full transformation description),derived,Reliable as-shipped
+norm_test_source3.parquet,source3,test,nm_core,string,Name minus mined noise tokens,derived,STALE ON DISK - see docs/NORMALIZED_DATASET_CONTEXT.md section 5.4
+norm_test_source3.parquet,source3,test,nm_compact,string,nm_core with spaces removed,derived,STALE ON DISK
+norm_test_source3.parquet,source3,test,nm_skel,string,Consonant skeleton of nm_compact,derived,STALE ON DISK
+norm_test_source3.parquet,source3,test,ad_full,string,Fully normalized address (see norm_train_source1.parquet ad_full for full transformation description),derived,Reliable as-shipped
+norm_test_source3.parquet,source3,test,ad_core,string,Address minus mined noise tokens,derived,STALE ON DISK
+norm_test_source3.parquet,source3,test,ad_num,string,Space-joined numeric address tokens,derived,STALE ON DISK
+norm_test_source3.parquet,source3,test,ad_alpha,string,Space-joined non-numeric address-core tokens,derived,STALE ON DISK
+norm_test_source3.parquet,source3,test,ctry,string,Normalized country label,derived,"Open-set; test set includes France, which is absent from training and must not be hardcoded/filtered"
+train_ground_truth.parquet,ground_truth,train,source1_entity_id,string,The S1- entity ID this row's ground truth applies to,original,Unchanged from raw challenge TSV; format-converted only
+train_ground_truth.parquet,ground_truth,train,matched_entity_ids,string,"Comma-separated list of matching S2-/S3- entity IDs; empty string means zero matches (singleton)",original,Unchanged raw string; not parsed into a list; not normalized
