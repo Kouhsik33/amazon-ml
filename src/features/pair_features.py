@@ -194,6 +194,46 @@ def compute_features(df: pl.DataFrame) -> Tuple[np.ndarray, List[str]]:
     first_c = df["c_ad_num"].str.split(" ").list.first().fill_null("")
     add("num_first_eq", ((first_q == first_c) & (first_q != "")).to_numpy().astype(np.float32))
 
+    # --- fuzzy street-number comparison ---------------------------------
+    # Exact set overlap is not enough. The generator corrupts street numbers
+    # by a single digit constantly (124/131, 8230/3230, 255/254) and truncates
+    # them (5129/512, 8465/846, 1401/140). With exact-only features every
+    # numeric signal collapses to zero on those pairs and the model rejects a
+    # true match, which error analysis showed to be its single largest
+    # confident-failure mode. These features let it see "almost the same
+    # number" as distinct from "a different number".
+    fq = first_q.to_list()
+    fc = first_c.to_list()
+    both = np.array([bool(a) and bool(b) for a, b in zip(fq, fc)], dtype=np.float32)
+    add("num_first_both_present", both)
+    add("num_first_lev", _cp(fq, fc, fuzz.ratio, 0.01) * both)
+    add("num_first_prefix", _cp(fq, fc, distance.Prefix.normalized_similarity) * both)
+    add("num_first_postfix", _cp(fq, fc, distance.Postfix.normalized_similarity) * both)
+
+    lq_n = np.array([len(x) for x in fq], dtype=np.float32)
+    lc_n = np.array([len(x) for x in fc], dtype=np.float32)
+    add("num_first_len_diff", np.abs(lq_n - lc_n))
+    is_pref = np.array(
+        [1.0 if (a and b and (a.startswith(b) or b.startswith(a))) else 0.0
+         for a, b in zip(fq, fc)], dtype=np.float32)
+    add("num_first_is_prefix", is_pref)          # truncation: 8465 vs 846
+    same_len_1 = np.array(
+        [1.0 if (a and b and len(a) == len(b)
+                 and sum(x != y for x, y in zip(a, b)) == 1) else 0.0
+         for a, b in zip(fq, fc)], dtype=np.float32)
+    add("num_first_one_digit_off", same_len_1)   # single-digit typo: 255 vs 254
+    rel = np.zeros(len(fq), dtype=np.float32)
+    for i, (a, b) in enumerate(zip(fq, fc)):
+        if a and b and a.isdigit() and b.isdigit() and len(a) < 10 and len(b) < 10:
+            ia, ib = int(a), int(b)
+            rel[i] = abs(ia - ib) / max(ia, ib, 1)
+    add("num_first_rel_diff", rel)
+
+    # best fuzzy match over ALL numbers on each side, not just the first
+    qn_l = df["q_ad_num"].to_list()
+    cn_l = df["c_ad_num"].to_list()
+    add("num_any_lev", _cp(qn_l, cn_l, fuzz.token_set_ratio, 0.01))
+
     lqa = np.array([len(x) for x in q_adc], dtype=np.float32)
     lca = np.array([len(x) for x in c_adc], dtype=np.float32)
     add("ad_len_ratio", _len_ratio(lqa, lca))
