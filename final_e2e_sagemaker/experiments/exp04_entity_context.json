@@ -1,0 +1,27 @@
+{
+  "scope": {
+    "country": "us",
+    "source": "S2",
+    "n_eval": 1000,
+    "n_fit": 4823,
+    "n_tune": 1177,
+    "seed": 20260926
+  },
+  "results": [
+    {
+      "config": "D_k30_df400000_ctx",
+      "top_k": 30,
+      "addr_max_df": 400000.0,
+      "threshold": 0.49999999999999983,
+      "tune_f05": 0.9498420351727151,
+      "candidate_recall": 0.9829787234042553,
+      "candidate_precision": 0.05443894556105444,
+      "macro_f05": 0.9356147152700212,
+      "pair_precision": 0.9746917585983128,
+      "pair_recall": 0.9130699088145897,
+      "n_predicted": 1541,
+      "false_positives": 39,
+      "missed_true": 143
+    }
+  ]
+}
